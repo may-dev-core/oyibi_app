@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>FinApp - Register</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'images/img/favicon.png'}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png'}" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!--external css-->
+  <link href="{% static 'lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style-page.css' %}" rel="stylesheet">
+
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery.js' %}"></script>
+
+  <!-- =======================================================
+    Template Name: Dashio
+    Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
+    Author: TemplateMag.com
+    License: https://templatemag.com/license/
+  ======================================================= -->
+</head>
+
+<body>
+  <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+  <div id="login-page">
+    <div class="container">
+      <form class="form-login" method="POST" action="">{% csrf_token %}
+        <h2 class="form-login-heading">SIGN UP NOW</h2>
+        <div class="login-wrap">
+
+
+          <p id="message" class="server-message error" style="font-size: 12px!important;">{{message}}</p>
+
+          <input class="form-control" type="text" name="company_name" id="company_name" value=""
+            placeholder="Company name" required autofocus />
+
+          <!-- <br> -->
+          <hr>
+          <!-- <br> -->
+
+          <input class="form-control" type="text" name="first_name" id="first_name" value="" placeholder="First name"
+            required />
+          <br>
+          <input class="form-control input-items" type="text" name="last_name" id="last_name" value=""
+            placeholder="Last name" required />
+          <br>
+          <input class="form-control input-items" type="email" name="email" id="email" value="" placeholder="Email"
+            required />
+          <br>
+          <input class="form-control input-items" type="password" name="password" id="password" value=""
+            placeholder="Password" required />
+          <br>
+          <input class="form-control input-items" type="password" name="confirm_password" id="confirm_password" value=""
+            placeholder="Confirm password" required />
+
+
+          <br>
+          <!-- <input class="btn btn-theme btn-block" onclick="VerifyFields()"><i class="fa fa-lock"></i> SIGN
+            UP</input> -->
+
+          <a href="#" id="registration-button" class="btn btn-theme btn-block" type="" value="Register"
+            onclick="VerifyFields()">SIGN UP</a>
+          <hr>
+          <!-- <div class="login-social-link centered">
+            <p>or you can sign in via your social network</p>
+            <button class="btn btn-facebook" type="submit"><i class="fa fa-facebook"></i> Facebook</button>
+            <button class="btn btn-twitter" type="submit"><i class="fa fa-twitter"></i> Twitter</button>
+          </div> -->
+
+          <!-- <div class="registration">
+            Don't have an account yet?<br />
+            <a class="" href="#">
+              Create an account
+            </a>
+          </div> -->
+        </div>
+
+        <!-- modal -->
+      </form>
+
+
+
+    </div>
+  </div>
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="{% static 'lib/bootstrap/js/bootstrap.min.js' %}"></script>
+  <!--BACKSTRETCH-->
+  <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+  <script type="text/javascript" src="{% static 'lib/jquery.backstretch.min.js' %}"></script>
+  <script>
+    $.backstretch("{% static 'images/img/login-bg.jpg' %}", {
+      speed: 500
+    });
+  </script>
+
+
+  <script>
+
+    function getPassword(pass, confirmPass) {
+      if (pass == confirmPass) {
+        return true;
+      } else {
+        return false;
+      }
+
+    }
+
+    // $(document).ready(function () {
+    var u_data;
+
+    function VerifyFields() {
+
+      // console.log($('input[name=referral_radio]').val());
+
+
+
+
+      var truePass, company_name, first_name, last_name, pass, confirm_password;
+
+      company_name = $("#company_name");
+      first_name = $("#first_name");
+      last_name = $("#last_name");
+      email = $("#email");
+
+      // phone_number = $('#phone_number');
+
+      // phone_number_check = $('#phone_number').val();
+
+      pass = $('#password');
+      confirm_password = $('#confirm_password');
+      // occupation = $('select[name=occupation] option:selected');
+
+      // console.log(String(phone_number_check))
+      // if(phone_number_check.indexOf("+")==0||(phone_number_check.indexOf("2")==0)){
+
+      //  console.log("do agani")
+      //  $('#message').html("<h5>Phone number format is wrong</h5>");
+      //   return;
+      // }
+
+
+      if (company_name.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        // first_name.addClass('warning');
+        company_name.focus();
+        return;
+      }
+
+      if (first_name.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        // first_name.addClass('warning');
+        first_name.focus();
+        return;
+      }
+
+      if (last_name.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        last_name.focus();
+        // last_name.addClass('warning');
+        return;
+      }
+
+      if (email.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        // first_name.addClass('warning');
+        if (email.include)
+          email.focus();
+        return;
+      }
+
+      if (pass.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        pass.focus();
+        // $(this).parents('p').addClass('warning');
+        return;
+      }
+
+      if (confirm_password.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        confirm_password.focus();
+        // $(this).parents('p').addClass('warning');
+        return;
+      }
+
+
+
+      if (getPassword(pass.val(), confirm_password.val()) == true) {
+        truePass = pass.val();
+
+        u_data = {
+          "password": truePass,
+          "company_name": company_name.val(),
+          "first_name": first_name.val(),
+          "last_name": last_name.val(),
+          "email": email.val(),
+
+          "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+          // "csrfmiddlewaretoken": '{{ csrf_token }}'
+        }
+
+      } else {
+        $('#message').html("<h5>Passwords do not match, please try again</h5>");
+        return;
+      }
+
+
+
+      // $('#Modal_terms_conditions').modal('show');
+
+      submitForm();
+
+
+
+
+
+    }
+
+
+
+
+
+
+    function submitForm() {
+
+      // $("#btn-register").on("click", function(event){
+      // event.preventDefault();
+
+
+      console.log("posting...")
+      console.log(u_data)
+
+      $.ajax({
+        type: "POST",
+        url: "{% url 'register' %}",//getBaseUrl()+"/api/v1/register/create_user/",
+        data: JSON.stringify(u_data),
+        headers: {
+          'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        dataType: "json",
+        contentType: 'application/json',
+
+        success: function (data) { //gone to the server and sever gives a response
+          console.log("hello");
+          $('#message').html("<h5>" + data.message + "</h5>");
+          // $('#Modal_terms_conditions').modal('hide');
+          if (data.status_code == 400) {
+            $('#Modal_terms_conditions').modal('hide');
+            // $('#message').html("<h5>" +data.message+"</h5>");
+          }
+        },
+
+
+      }).done(function (data) {
+        console.log("Data" + data);
+        if (data.status_code == 200) {
+          var reg_data = data;
+
+          console.log(reg_data)
+          window.location.href = data.next_page;
+          // $('#success-modal-body').html(data.message);
+          // $('#successfulPaymentModal').modal('show');
+        } else if (data.status_code == 404) {
+          // $('#Modal_terms_conditions').modal('hide');
+          $('#message').html("<h5>" + data.message + "</h5>");
+
+          // upline_id.focus();
+        } else {
+          console.log("stop");
+          $('#message').html("<h5>" + data.message + "</h5>");
+
+        }
+      });
+      // document.getElementById("create-account-form").submit();
+
+      // });
+      // });  
+
+    }
+
+
+  </script>
+
+
+</body>
+
+</html>

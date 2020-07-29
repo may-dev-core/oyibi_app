@@ -1,0 +1,15 @@
+body{
+    /*font-family: 'Roboto', sans-serif;*/
+    font-family: 'Lato';
+    padding-top: 60px;
+    font-weight: normal;
+    font-style: normal;
+   
+  }
+
+    .dasboard-main{
+    background-color: #2E353D;
+    margin-top: 67px;
+    border-top: 1px solid #99CCFF;
+    padding: 0;
+  }

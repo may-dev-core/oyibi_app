@@ -1,0 +1,263 @@
+  .dasboard-main{
+    background-color: #2E353D;
+    margin-top: 67px;
+    border-top: 1px solid #99CCFF;
+    padding: 0;
+  }
+
+
+  .vertical-menu {
+    width: 100%; /* Set a width if you like */
+    /*overflow: hidden;*/
+    position: relative;
+    font-size: 12px;
+
+
+  }
+
+  .vertical-menu a {
+    background-color: #2E353D; /* Grey background color */
+    color: #ffffff; /* Black text color */
+    display: block; /* Make the links appear below each other */
+    padding: 12px;   /*Add some padding*/ 
+    text-decoration: none; /* Remove underline from links */
+    border-top: 1px solid #F0F0F0;
+    border-bottom: 1px solid #ffffff;
+    letter-spacing: 0.5px;
+    /*font-family:  "Poppins", sans-serif, "FontAwesome";*/
+  }
+
+  .vertical-menu a:hover {
+    background-color: #ccc;
+    color: #303030; /* Dark grey background on mouse-over */
+  }
+
+  .vertical-menu a.active {
+    background-color: #3399CC; /* Add a green color to the "active/current" link */
+    color: white;
+  }
+
+
+
+
+
+  .col-md-2{
+    padding-right: 0; padding-left: 0;
+    background-color: #2E353D; 
+    /*margin-bottom: 100%;*/
+    /*float: left;*/
+      /*position: static;*/
+    /*padding-bottom: 100%;*/
+
+    height: 90vh; /* For 100% screen height */
+      /*width:  100vw;  For 100% screen width */
+    overflow:hidden;
+  }
+  .col-md-10{
+    overflow: hidden;
+    height: 100%;
+  }
+
+
+
+/* Fixed sidenav, full height */
+.sidenav {
+  height: 100%;
+  width: 250px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: green;
+  /*overflow-x: hidden;*/
+  padding-top: 20px;
+}
+
+/* Style the sidenav links and the dropdown button */
+.dropdown-btn {
+  /*padding: 6px 8px 6px 16px;*/
+  text-decoration: none;
+  /*font-size: 20px;*/
+  color: #818181;
+  display: block;
+  border: none;
+  background: none;
+  width:100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+/* On mouse-over */
+.dropdown-btn:hover {
+  color: #f1f1f1;
+}
+
+
+/* Add an active class to the active dropdown button */
+.active {
+  background-color: #3399CC;
+  color: white;
+}
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+  /*float: right;*/
+  /*padding-left: 50%;*/
+}
+
+
+.dashboard-thumbnails{
+  /*width: 90%;*/
+  margin: 0 auto;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  height: 23vh;
+  padding-bottom: 10px;
+}
+
+.dashboard-thumbnails h3{
+  /*width: 90%;*/
+  font-size: 14px!important;
+}
+
+.dashboard-thumbnails caption{
+  /*width: 90%;*/
+  padding: 0px!important;
+  padding: 0px!important;
+}
+
+.default-dashboard{
+  padding: 4vh;
+}
+
+.space{
+  height: 4vh;
+}
+
+.view-details{
+  /*margin-top: 10%;*/
+  border-top: 1px solid #f1f1f1; 
+  text-align: right; 
+  padding-right: 10px; 
+  padding-top: .5%; 
+  font-size: 12px;
+  font-weight: bold;
+
+}
+ .dashboard-item-header{
+  color: #1554A3;
+  font-weight: bold;
+ }
+ .caption p{
+  font-size: 12px;
+ }
+
+ footer{
+  display: none;
+ }
+ .footer{
+  display: none;
+ }
+
+@media (min-width: 200px) and (max-width: 768px) {
+  .col-md-2{
+    /*margin-top: 6%;*/
+    padding-right: 0; 
+    padding-left: 0;
+
+    /*margin-bottom: 100%;*/
+    /*float: left;*/
+      /*position: static;*/
+    /*padding-bottom: 100%;*/
+
+    height: 57vh; /* For 100% screen height */
+      /*width:  100vw;  For 100% screen width */
+  }
+  .col-md-10{
+    margin-top: 0;
+  }
+
+  .vertical-menu{
+
+  }
+
+  .main-content-page{
+    padding-right: 0;
+    padding-left: 0;
+    margin-left: 0;
+    margin-left: 0;
+  }
+.view-details{
+  /*margin-top: 10%;*/
+  border-top: 1px solid #f1f1f1; 
+  text-align: right!important; 
+  padding-right: 10px; 
+  padding-top: 0%; 
+  font-size: 12px;
+  margin-top: 0px;
+  /*position: absolute;*/
+}
+ .dashboard-thumbnails{
+  /*width: 90%;*/
+  margin: 0 auto;
+  padding: 0;
+  margin-bottom: 10px;
+  height: 200px;
+}
+
+.space{
+  height: 5px;
+}
+
+}
+
+/*@media(min-width: 630px){
+  .col-md-2{
+    margin-top: 6%;
+  }
+}*/
+
+@media (max-width: 991px) {
+  .col-md-2{
+
+    padding-right: 0; padding-left: 0;
+    /*margin-bottom: 100%;*/
+    /*float: left;*/
+      /*position: static;*/
+    
+
+    height: 37vh; /* For 100% screen height */
+      /*width:  100vw;  For 100% screen width */
+  }
+  .col-md-10{
+    padding-top: 5%;
+    height: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-left: 0;
+  }
+
+  .main-content-page{
+    padding-right: 0;
+    padding-left: 0;
+    margin-left: 0;
+    margin-left: 0;
+  }
+
+ .dashboard-thumbnails{
+  /*width: 90%;*/
+  margin: 0 auto;
+  padding: 0;
+  margin-bottom: 10px;
+  }
+}

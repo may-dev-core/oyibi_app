@@ -1,0 +1,164 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Expenditure{% endblock title %}
+
+{% block content%}
+
+<style>
+  .success {
+    color: rgb(9, 150, 9) !important;
+  }
+</style>
+
+
+
+<h3><i class="fa fa-angle-right"></i> Settings/Vehicle(s) 
+  <span><a href="{% url 'vehicle' %}" id="btn_refresh" class="btn btn-theme pull-right" type="" value="Refresh" >Refresh</a></span></h3> 
+<!-- BASIC FORM ELELEMNTS -->
+
+<!-- /row -->
+<!-- INLINE FORM ELELEMNTS -->
+
+
+<!-- class Income(models.Model):
+date_of_income = models.DateField()
+vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+amount = models.FloatField()
+source_of_income = models.ForeignKey(
+SourceOfIncome, on_delete=models.CASCADE)
+income_description = models.TextField(blank=True, null=True)
+date_added = models.DateTimeField(auto_now_add=True, auto_now=False)
+date_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+def __str__(self):
+return str(self.source_of_income) -->
+
+
+
+
+<!-- <div class="row mt">
+  <div class="col-lg-12">
+    <div class="form-panel">
+      <h4 class="mb"><i class="fa fa-angle-right"></i> Add Expenditure</h4>
+
+    </div>
+   
+  </div>
+ 
+</div> -->
+
+
+
+
+
+
+
+
+<div class="flot-chart">
+  <!-- page start-->
+
+  <div class="row mt">
+    <div class="col-lg-6">
+      <div class="content-panel">
+        <h4><i class="fa fa-angle-right"></i> Add Vehicle</h4>
+        <div class="panel-body">
+
+          <form class="" method="POST" role="form" action="">{% csrf_token %}
+
+            <p id="message" class="server-message error" style="font-size: 12px!important;">{{message}}</p>
+            <p id="message-success" class="server-message success" style="font-size: 12px!important;">{{message}}</p>
+
+            {{ vehicle_form|crispy }}
+            <!-- <br> -->
+
+            <button type="submit" class="btn btn-theme" style="margin-top: 3%;">Update</button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-lg-6">
+      <div class="content-panel">
+        <legend>
+        <h4><i class="fa fa-angle-right"></i> Vehicle(s)</h4>
+        </legend>
+        <div class="panel-body">
+          <!-- <div id="chart-3" class="chart"></div> -->
+          <form method="post" action="{% url 'delete_vehicle' %}" id="site_delete_form">
+            {% csrf_token %}
+            
+              <!-- <h4>Manage Vehicle Types(s)</h4> -->
+       
+            <ul class=""
+              style="text-align: left; padding-left:20px; padding-right:20px; padding-bottom: 20px; list-style-type:none; ">
+
+              <div style="overflow-y: scroll; overflow-x: hidden; /*border: 1px solid black;*/ height: 550px">
+                {%for obj in vehicle_obj%}
+                <li style=" border-bottom: 1px solid #A4A4A4; padding-top: 10px; ">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td width="100%">
+                          <h5>
+                            <label>
+                              {{obj.vehicle_registration_no}}
+                            </label>
+                          </h5>
+                        </td>
+
+                        <td style="padding-left: 10px;">
+                          <a href="{% url 'edit_vehicle' obj.id %}" style="margin-right: 10px;">Edit</a>
+                          <input type="checkbox" class="" name="items" value='{{obj.id}}'
+                            style="padding-left: 99px; width:15px; height:15px;">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </li>
+                {% endfor%}
+              </div>
+            </ul>
+
+            <p style="font-size: 10px; color: red;" class="pull-left">*Select Vehicle to delete</p>
+            <div style="margin: 0 auto;">
+              <input class="btn btn-danger pull-right" type="submit" value="Delete" />
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ------------------------------------------------------- -->
+
+
+  <!-- ----------------------------------------------------------- -->
+
+
+
+
+  <!-- ===================== -->
+
+
+
+
+  <!-- ===================== -->
+
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock%}

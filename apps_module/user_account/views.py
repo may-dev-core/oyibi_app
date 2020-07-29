@@ -1,0 +1,910 @@
+# import urllib
+# from urllib.parse import urlencode
+# from urllib.request import urlopen
+# from django.shortcuts import render
+# from django.shortcuts import render, get_object_or_404
+# from django.views.generic import View
+# from django.contrib.auth.models import User
+# from django.http import Http404, HttpResponse, HttpResponseRedirect, JsonResponse
+# from django.contrib.auth import authenticate, login as auth_login
+# from django.contrib.auth import logout as django_logout
+# from django.contrib.auth.decorators import login_required
+# from django.contrib import messages
+# from django.core import serializers
+# from django.contrib.auth.models import User
+# from django.conf import settings
+# from django.contrib.sites.models import Site
+# from django.core.mail import send_mail
+# from rest_framework.response import Response
+
+# # from base.models import User
+# from django.views.decorators.csrf import csrf_exempt
+
+# import json
+# from datetime import datetime
+# # Create your views here.
+
+# # from api.serializers import (
+# #     UserAdminSerializer,
+# #     PersonalProfileSerializer,
+# #     AccountProfileSerializer,
+# #     NetworkProfileSerializer,
+# #     UserLoginSerializer,
+
+# # )
+
+# # from userapp.models import (
+# #     PersonalProfile,
+# #     AccountProfile,
+# #     NetworkProfile,
+# #     Complaint,
+# #     PaymentTransaction,
+# #     RegistrationPaymentInfo,
+# #     PasswordVerification,
+# #     BenefitRequest
+
+# # )
+
+# # from settingsapp.models import (ContactSettings, FeeSettings, LevelSettings)
+
+# from validate_email import validate_email
+# # from lib.phone import get_phone_to_username, get_phone_number, phone_to_momo_format
+# from lib.RandomTokenGenerator import RandomTokenGenerator
+# # from lib.pyramid_engine import get_progress_level, check_current_level
+# # from lib.sms import send_signUp_sms, send_password_pin_sms
+# # from lib.email import send_signUp_email, send_contact_email
+# # from lib.get_upline import get_upline
+
+# # import requests
+
+
+# def homepage(request):
+#     context = {}
+#     return render(request, 'homepage.html', context)
+
+
+# # @csrf_exempt
+# # @django_logout
+# def login(request):
+#     message = ""
+#     result = ""
+
+#     if request.method == "POST":
+#         print(json.loads(request.body.decode()))
+#         post_data = json.loads(request.body.decode())
+#         # print(post_data['phone_number'])
+
+#         user_email = post_data['user_email']
+#         password = post_data['password']
+
+#         try:
+#             user_reg = authenticate(username=user_email, password=password)
+#             if user_reg is not None:
+#                 if user_reg.is_active:
+#                     if user_reg.is_staff:
+
+#                         auth_login(request, user_reg)
+#                         print("user staff logged in")
+#                         result = {
+#                             "status_code": 200,
+#                             "message": message,
+#                             "next_url": "/backend_dashboard"
+#                         }
+#                         return JsonResponse(result)
+#                     else:
+#                         auth_login(request, user_reg)
+#                         print("user logged in")
+#                         result = {
+#                             "status_code": 200,
+#                             "message": message,
+#                             "next_url": "/dashboard"
+#                         }
+#                         return JsonResponse(result)
+#             else:
+#                 message = "User email or password is incorrect"
+#                 result = {
+#                     "status_code": 400,
+#                     "message": message,
+#                 }
+#             return JsonResponse(result)
+#         except Exception as e:
+#             raise e
+#             message = "Account does not exist, please register"
+#             result = {
+#                 "status_code": 500,
+#                 "message": message,
+#             }
+#             return JsonResponse(result)
+
+#     context = {}
+#     return render(request, 'login.html', context)
+
+
+# def register(request, *args, **kwargs):
+#     if request.user.is_staff:
+#         return HttpResponseRedirect('/backend_dashboard')
+#     # get upline url on using request url
+#     upline_id_in_url = request.GET.get('referral_id', None)
+#     if upline_id_in_url == None:
+#         upline_id_in_url = ""
+#     print("upline id", upline_id_in_url)
+
+#     # try:
+#     # 	verify_upline = NetworkProfile.objects.get(pyramid_guid=upline_id_in_url)
+
+#     # 	print("Valid upline", verify_upline.user)
+#     # except Exception as e:
+#     # 	message = "Sponsor Id is invalid, please check and try again"
+#     # 	result = {
+#     # 		"status_code":400,
+#     # 		"message":message
+#     # 	}
+#     # 	return JsonResponse(result)
+
+#     # get new upline if upline in url has 3
+#     # if 3 get a new upline and show that in on page
+#     current_site = Site.objects.get_current()
+#     str(current_site)
+#     print("current site -----  ", str(current_site))
+#     link = str(str(current_site) +
+#                "api/v1/pyramid/?referral_id="+upline_id_in_url+"")
+#     print(link)
+#     print("?????????????")
+#     # print(requests.get(link, verify=False))
+#     # response = json.loads(requests.get(link, verify=False).text)
+#     print("========", response)
+#     try:
+#         print(get_upline(response, upline_id_in_url))
+#         upline_id_in_url = get_upline(response, upline_id_in_url)
+#         print("okay.... okay... okay", upline_id_in_url)
+
+#     except Exception as e:
+#         print("**************** ", e)
+
+#     # not been used but can get domain name setup in the database
+#     # current_site = Site.objects.get_current()
+#     # print("domain name",current_site.domain)
+#     data = {}
+
+#  # {'referral-radio': ['No'], 'referral-id': [''],
+#  # 'email': ['may@gmail.com'], 'password': ['1'], 'confirm_password': ['1'], 'first_name': ['1'], 'last_name': ['1']}
+#     u_admin = "admin@wcp.com"
+#     admin_user = User.objects.get(email=u_admin)
+
+#     if request.method == "POST":
+#         print(json.loads(request.body.decode()))
+#         post_data = json.loads(request.body.decode())
+#         print(post_data['phone_number'])
+
+#         # return JsonResponse(data)
+#         system_gen_username = RandomTokenGenerator().generateUID()
+#         phone_number = post_data['phone_number']
+#         with_uplineId = post_data['referral_radio']
+#         upline_id = post_data['upline_id']
+#         first_name = post_data['first_name']
+#         last_name = post_data['last_name']
+#         u_email = post_data['email']
+#         occupation = post_data['occupation']
+
+#         password = post_data['password']
+#         # confirmpassword=post_data['confirm_password']
+#         current_site = Site.objects.get_current()
+#         # str(current_site)
+#         link = str(str(current_site) +
+#                    "api/v1/pyramid/?referral_id="+upline_id+"")
+#         # response = json.loads(requests.get(link, verify=False).text)
+
+#         print("response in post === ", response)
+
+#         if User.objects.filter(username=system_gen_username).exists():
+#             print(phone_number, " already exists")
+#             message = "Sorry, user already exists, please try again."
+#             data = {}
+#             result = {
+#                 'status_code': 400,
+#                 'message': message,
+#                 'data': data,
+#             }
+#             return JsonResponse(result)
+
+#         if with_uplineId == "Yes":
+#             if len(upline_id) <= 0:
+#                 message = "Enter Sponsor ID"
+#                 result = {
+#                     "status_code": 404,
+#                     "message": message,
+#                 }
+#                 return JsonResponse(result)
+
+#         if len(u_email) > 0:
+#             is_valid = validate_email(str(u_email))
+#             print(is_valid)
+#             if is_valid == True:
+#                 user_email = u_email
+#             else:
+#                 result = {
+#                     "status_code": 404,
+#                     "message": "Email address is invalid",
+#                 }
+#                 return JsonResponse(result)
+#         else:
+#             user_email = ''
+#         # verify payment, uplink and create user here
+
+#         try:
+#             # store user upline and payment status in RegistrationPaymentInfo
+#             if upline_id:
+#                 try:
+#                     verify_upline = NetworkProfile.objects.get(
+#                         pyramid_guid=upline_id)
+
+#                     print("Valid upline", verify_upline.user)
+#                 except Exception as e:
+#                     message = "Sponsor Id is invalid, please check and try again"
+#                     result = {
+#                         "status_code": 400,
+#                         "message": message
+#                     }
+#                     return JsonResponse(result)
+
+#                 try:
+#                     user = User.objects.create_user(username=system_gen_username, password=password,
+#                                                     first_name=first_name, last_name=last_name, email=user_email)
+#                     user.is_active = True
+
+#                     person_profile_obj = PersonalProfile.objects.create(
+#                         user=user, phone_number=get_phone_number(phone_number), occupation=occupation)
+
+#                     reg_payment_info_obj = RegistrationPaymentInfo.objects.create(
+#                         user=user, upline_id=get_upline(response, upline_id))
+#                     print("user with upline", reg_payment_info_obj.user)
+
+#                 except Exception as e:
+#                     raise e
+
+#             else:
+#                 try:
+#                     user = User.objects.create_user(username=system_gen_username, password=password,
+#                                                     first_name=first_name, last_name=last_name, email=user_email)
+#                     user.is_active = True
+#                     person_profile_obj = PersonalProfile.objects.create(
+#                         user=user, phone_number=get_phone_number(phone_number), occupation=occupation)
+#                     upline_network = NetworkProfile.objects.get(
+#                         user=admin_user)
+#                     reg_payment_info_obj = RegistrationPaymentInfo.objects.create(
+#                         user=user, upline_id=upline_network.pyramid_guid)
+#                     # print("Uplink user", upline_network.user)
+#                     # create user network and add to upline pyramid
+#                     # user_network_profile = NetworkProfile.objects.create(user=user, parent=upline_network)
+#                     print("user without upline", reg_payment_info_obj.user)
+#                 except Exception as e:
+#                     raise e
+
+#             # send sms
+#             try:
+#                 profile_obj = PersonalProfile.objects.get(user=user)
+#                 print("cell ", str(profile_obj.phone_number))
+#                 # sms_data=send_signUp_sms(user.first_name, profile_obj.phone_number, user.username)
+#                 # print(sms_data)
+#             except Exception as e:
+#                 print(e)
+#                 pass
+
+#             # send email
+#             try:
+#                 # email_data=send_signUp_email(user.first_name, user.email, user.username)
+#                 # print(email_data)
+#                 pass
+#             except Exception as e:
+#                 print(e)
+#                 pass
+
+#             user_reg = authenticate(
+#                 username=system_gen_username, password=password)
+#             if user_reg is not None:
+#                 if user_reg.is_active:
+
+#                     auth_login(request, user_reg)
+
+#                     print("user logged in")
+#                     message = ""
+#                     result = {
+#                         "status_code": 200,
+#                         "message": message,
+#                     }
+#                     return JsonResponse(result)
+#                     # return HttpResponseRedirect('/dashboard')
+#             print("continue")
+#         except Exception as e:
+#             print("error", e)
+#             message = "User account not created, please contact Administrator"
+#             result = {
+#                 "status_code": 500,
+#                 "message": message,
+#             }
+#             return JsonResponse(result)
+
+#     context = {
+#         "upline_id_url": upline_id_in_url.replace("'", ""),
+#     }
+#     # return Response(context)
+#     return render(request, 'register.html', context)
+
+
+# # @login_required
+# def logout(request):
+#     if request.user is None:
+#         django_logout(request)
+#         return HttpResponseRedirect('/')
+#     elif request.user is not None:
+#         django_logout(request)
+#         return HttpResponseRedirect('/')
+
+
+# @csrf_exempt
+# def personalprofile(request):
+
+#     print(request.user)
+
+#     serializer = PersonalProfileSerializer
+
+#     context = {
+#         "serializer": serializer,
+#     }
+#     return render(request, 'personal_profile.html', context)
+
+# # @csrf_exempt
+# # @login_required
+
+
+# def dashboard(request):
+#     if not request.user.is_authenticated:
+#         return HttpResponseRedirect('/')
+#     elif(request.user.is_staff):
+#         return HttpResponseRedirect('/backend_dashboard')
+#     else:
+#         pass
+#     #     try:
+#     #         current_level = ''
+#     #         level_name = ''
+#     #         percent_complete = ''
+#     #         user = request.user
+#     #         user_payment = RegistrationPaymentInfo.objects.get(
+#     #             user=user, payment_status="paid")
+
+#     #         # if user_payment.payment_status is "paid":
+#     #         user_email = user.username
+#     #         user_full_name = user.get_full_name()
+
+#     #         print(user_full_name)
+#     #         user_reg_date = user.date_joined
+#     #         user_network_profile = NetworkProfile.objects.get(user=user)
+
+#     #         user_referral_id = user_network_profile.pyramid_guid
+
+#     #         current_site = Site.objects.get_current()
+#     #         print("++++++++++++++++", current_site)
+
+#     #         user_referral_link = str(
+#     #             current_site)+str("register/?referral_id='"+str(user_referral_id)+"'").replace("'", "")
+
+#     #         print(user_referral_link)
+
+#     #         print("Token", RandomTokenGenerator().generateId())
+#     #         # slkyaep0nn9w3gxr
+#     #         print("Number", RandomTokenGenerator().generateUID())
+#     #         # try:
+#     #         progress_level = check_current_level(user_referral_id)
+
+#     #         # print("parent", user_network_profile.parent.pyramid_guid)
+#     #         current_level = progress_level['level']
+#     #         percent_complete = progress_level['completion']
+#     #         level_name = progress_level['level_name']
+#     #         # next_to_get = progress_level['up_line']
+
+#     #         print("Progress Level", current_level)
+#     #         print("Progress Complete", percent_complete)
+#     #         # print("Next To get downline",next_to_get)
+#     #         # except Exception as e:
+#     #         # 	print("",e)
+#     #         # progress_level=get_progress_level(user_referral_id)
+#     #         # current_level = progress_level['level']
+#     #         # percent_complete = progress_level['completion']
+#     #         # level_name = progress_level['level_name']
+#     #         # print("Progress Level",current_level)
+#     #         # print("Progress Complete",percent_complete)
+
+#     #         # network info for dashboard
+#     #         # need to fix level correctly
+#     #         network_pyramid = NetworkProfile.objects.get(user=user)
+#     #         pyramind_level = network_pyramid.get_level()
+#     #         num_of_downliners = len(network_pyramid.get_descendants())
+
+#     #         print('level ', network_pyramid.get_level())
+#     #         print('Childern ', len(network_pyramid.get_children()))
+#     #         # gives +2 i dont know why
+#     #         print('descendants count ', network_pyramid.get_descendant_count())
+#     #         # return HttpResponseRedirect('/dashboard')
+#     #         # else:
+#     #         # 	# return HttpResponseRedirect('/payment')
+#     #         # 	pass
+#     #     except Exception as e:
+#     #         print(e)
+#     #         return HttpResponseRedirect('/payment')
+
+#     # print("User email", user_pin)
+#     # context = {
+#     #     "user_pin": user_pin,
+#     #     "user_full_name": user_full_name,
+#     #     "user_network_id": user_referral_id,
+#     #     "user_referral_link": user_referral_link,
+#     #     "user_reg_date": user_reg_date,
+#     #     "current_level": current_level,
+#     #     "level_name": level_name,
+#     #     "percent_complete": percent_complete,
+#     #     "num_of_downliners": num_of_downliners
+#     # }
+
+#     context = {}
+#     return render(request, 'dashboard.html', context)
+
+
+# @csrf_exempt
+# def howitworks(request):
+
+#     context = {}
+#     return render(request, 'how-it-works.html', context)
+
+
+# # def dashProfileDetails(request):
+# #     user = request.user
+# #     print(user)
+# #     message = ""
+# #     accountmessage = ""
+# #     current_date = datetime.now()
+
+# #     # user_network_profile=NetworkProfile.objects.get(user=user)
+
+# #     try:
+# #         user_firstname = request.user.first_name
+# #         user_lastname = request.user.last_name
+# #         user_email = request.user.email
+
+# #         profile_obj = PersonalProfile.objects.get(user=user)
+
+# #         other_names = profile_obj.other_names
+# #         phone_number = str(profile_obj.phone_number)
+# #         date_of_birth = profile_obj.date_of_birth
+# #         occupation = profile_obj.occupation
+# #         country = str(profile_obj.country)
+# #         region = profile_obj.region
+# #         address = profile_obj.address
+# #         city = profile_obj.city
+# #         gender = profile_obj.gender
+# #         marital_status = profile_obj.marital_status
+# #         message = ""
+
+# #     except Exception as e:
+# #         print(e)
+# #         other_names = ''
+# #         phone_number = ''
+# #         date_of_birth = current_date
+# #         occupation = ''
+# #         country = ''
+# #         region = ''
+# #         address = ''
+# #         city = ''
+# #         gender = '---Select---'
+# #         marital_status = ''
+# #         message = "Update your profile"
+
+# #     # get user account details
+# #     try:
+# #         user_acc_details = AccountProfile.objects.get(user=user)
+
+# #         bank_account_name = user_acc_details.bank_account_name
+# #         bank_account_number = str(user_acc_details.bank_account_number)
+# #         bank_name = user_acc_details.bank_name
+# #         bank_branch = user_acc_details.bank_branch
+# #         mobile_money_number = str(user_acc_details.mobile_money_number)
+# #         mobile_money_name = user_acc_details.mobile_money_name
+# #         mobile_money_provider = user_acc_details.mobile_money_provider
+
+# #         accountmessage = ""
+
+# #     except Exception as e:
+# #         print("bank", e)
+# #         bank_account_name = ""
+# #         bank_account_number = ""
+# #         bank_name = ""
+# #         bank_branch = ""
+# #         mobile_money_number = ""
+# #         mobile_money_name = ""
+# #         mobile_money_provider = ""
+
+# #         accountmessage = "Update your Bank details"
+
+# #     # print(request.user.get_full_name())
+
+# #     if request.method == "POST":
+# #         post_data = json.loads(request.body.decode())
+# #         print(post_data)
+
+# #         try:
+# #             first_name = post_data['first_name']
+# #             last_name = post_data['last_name']
+# #             other_names = post_data['other_names']
+# #             phone_number = post_data['phone_number']
+# #             u_email = post_data['email']
+# #             date_of_birth = post_data['date_of_birth']
+
+# #             occupation = post_data['occupation']
+# #             country = post_data['country']
+# #             region = post_data['region']
+
+# #             address = post_data['address']
+# #             city = post_data['city']
+# #             gender = post_data['gender']
+# #             marital_status = post_data['marital_status']
+
+# #             if len(u_email) > 0:
+# #                 is_valid = validate_email(str(u_email))
+# #                 print(is_valid)
+# #                 if is_valid == True:
+# #                     user_email = u_email
+# #                 else:
+# #                     result = {
+# #                         "status_code": 404,
+# #                         "message": "Email address is invalid",
+# #                     }
+# #                     return JsonResponse(result)
+# #             else:
+# #                 user_email = ''
+
+# #             new_user_obj = User.objects.filter(username=user).update(
+# #                 first_name=first_name, last_name=last_name, email=user_email)
+# #             print("user updated ", new_user_obj)
+
+# #             PersonalProfile.objects.filter(user=user).update(other_names=other_names,
+# #                                                              phone_number=get_phone_number(phone_number), date_of_birth=date_of_birth, occupation=occupation,
+# #                                                              country=country, region=region,
+# #                                                              address=address,
+# #                                                              city=city, gender=gender,
+# #                                                              marital_status=marital_status)
+
+# #             message = "Profile successfully updated."
+
+# #             result = {
+# #                 "status_code": 200,
+# #                 "message": message,
+# #             }
+# #             return JsonResponse(result)
+
+# #         except Exception as e:
+# #             # raise e
+# #             print("error", e)
+
+# #             result = {
+# #                 "status_code": 400,
+# #                 "message": "All fields are required",
+# #             }
+# #             return JsonResponse(result)
+
+# #     context = {
+# #         "user_fname": user_firstname,
+# #         "user_lastname": user_lastname,
+# #         "user_email": user_email,
+# #         # "user_network_id":user_network_profile.pyramid_guid,
+
+# #         'other_names': other_names,
+# #         'phone_number': get_phone_number(phone_number),
+# #         'date_of_birth': date_of_birth.strftime("%Y-%m-%d"),
+# #         'occupation': occupation,
+# #         'country': str(country),
+# #         'region': region,
+# #         'address': address,
+# #         'city': city,
+# #         'gender': gender,
+# #         'marital_status': marital_status,
+
+# #         "message": message,
+
+
+# #         'bank_account_name': bank_account_name,
+# #         'bank_account_number': str(bank_account_number),
+# #         'bank_name': bank_name,
+# #         'bank_branch': bank_branch,
+# #         'mobile_money_number': get_phone_number(mobile_money_number),
+# #         'mobile_money_name': mobile_money_name,
+# #         'mobile_money_provider': mobile_money_provider,
+
+
+# #         "accountmessage": accountmessage,
+# #     }
+# #     return render(request, 'dash_personal_profile.html', context)
+
+
+# def updateAccountDetails(request):
+#     user = request.user
+#     message = ""
+#     print("u-", user)
+#     if request.method == "POST":
+#         post_data = json.loads(request.body.decode())
+#         print(post_data)
+
+#         bank_account_name = post_data['bank_account_name']
+#         bank_account_number = post_data['bank_account_number']
+#         bank_name = post_data['bank_name']
+#         bank_branch = post_data['bank_branch']
+#         mobile_money_number = post_data['mobile_money_number']
+#         mobile_money_name = post_data['mobile_money_name']
+#         mobile_money_provider = post_data['mobile_money_provider']
+#     try:
+
+#         try:
+#             user_account_obj = AccountProfile.objects.get(user=user)
+#             if user_account_obj:
+#                 AccountProfile.objects.filter(user=user).update(bank_account_name=bank_account_name,
+#                                                                 bank_account_number=bank_account_number,
+#                                                                 bank_name=bank_name, bank_branch=bank_branch,
+#                                                                 mobile_money_number=get_phone_number(
+#                                                                     mobile_money_number),
+#                                                                 mobile_money_name=mobile_money_name,
+#                                                                 mobile_money_provider=mobile_money_provider)
+
+#                 message = "Bank details successfully updated."
+#                 result = {
+#                     "status_code": 200,
+#                     "message": message,
+#                 }
+
+#                 return JsonResponse(result)
+
+#         except Exception as e:
+#             print("error", e)
+#             AccountProfile.objects.create(user=user, bank_account_name=bank_account_name,
+#                                           bank_account_number=bank_account_number,
+#                                           bank_name=bank_name, bank_branch=bank_branch,
+#                                           mobile_money_number=get_phone_number(
+#                                               mobile_money_number),
+#                                           mobile_money_name=mobile_money_name,
+#                                           mobile_money_provider=mobile_money_provider)
+
+#             message = "Bank details created."
+#             result = {
+#                 "status_code": 200,
+#                 "message": message,
+#             }
+#             return JsonResponse(result)
+#             # raise e
+
+#     except Exception as e:
+#         print(e)
+#         message = "Bank details could not be updated."
+#         result = {
+#             "status_code": 400,
+#             "message": message,
+#         }
+#         return JsonResponse(result)
+#         # raise e
+
+
+# #
+
+
+# @csrf_exempt
+# def about_us(request):
+
+#     context = {}
+#     return render(request, 'about_us.html', context)
+
+
+# # def contact_us(request):
+
+# #     if request.method == "POST":
+# #         post_data = json.loads(request.body.decode())
+# #         print("contact_us", post_data)
+# #         # contact_us {'fullname': '', 'email': '', 'subject': '', 'message': '', 'csrfmiddlewaretoken': '8f7uYxxcxVlNnBku97QKNzoxKw4iH9o6kBYg9zSGI78iWXoCadWHpPbeii4q4d5P'}
+
+# #         sender_name = post_data['fullname']
+# #         sender_email = post_data['email']
+# #         msg_subject = post_data['subject']
+# #         msg = post_data['message']
+# #         recaptcha_response = post_data['respuesta_recaptcha']
+# #         website_email = settings.EMAIL_HOST_USER
+# #         email_receiver = settings.EMAIL_RECEIVER
+
+# #         try:
+# #             url = 'https://www.google.com/recaptcha/api/siteverify'
+# #             values = {
+# #                 'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+# #                 'response': recaptcha_response
+# #             }
+# #             data = urllib.parse.urlencode(values).encode()
+# #             req = urllib.request.Request(url, data=data)
+# #             response = urllib.request.urlopen(req)
+# #             feedback = json.loads(response.read().decode())
+
+# #             print('---', feedback)
+# #             if feedback['success'] == True:
+
+# #                 email_data = send_contact_email(
+# #                     msg_subject, sender_name, sender_email, msg)
+
+# #                 # print("Email data",email_data)
+
+# #                 message = "Thank you " + \
+# #                     str(sender_name).upper() + \
+# #                     " for contacting us. Your message has been successfully received."
+# #                 result = {
+# #                     "status_code": 200,
+# #                     "message": message,
+# #                 }
+# #                 return JsonResponse(result)
+# #             else:
+# #                 result = {
+# #                     "status_code": 401,
+# #                     "message": "Verify you are not a robot"
+# #                 }
+# #                 return JsonResponse(result)
+# #         except Exception as e:
+
+# #             print("error---", e)
+# #             message = "Sorry your message has not been received please try again"
+# #             result = {
+# #                 "status_code": 400,
+# #                 "message": message,
+# #             }
+# #             return JsonResponse(result)
+
+# #     context = {
+# #         "recapture_key": settings.GOOGLE_RECAPTCHA_SITE_KEY
+# #     }
+# #     return render(request, 'contact_us.html', context)
+
+
+# # Create your views here.
+
+
+# def terms_conditions(request):
+#     return render(request, "terms_conditions.html", {})
+
+
+# def faqs(request):
+
+#     context = {}
+#     return render(request, "faqs.html", context)
+
+
+# def forgot_password(request):
+#     # user=request.user
+
+#     # print(RandomTokenGenerator().generatePasswordPin())
+#     if request.method == 'POST':
+#         post_data = json.loads(request.body.decode())
+#         print("post data:", )
+#         user_pin = post_data['user_pin']
+
+#         if User.objects.filter(username=user_pin).exists():
+#             # send sms with pin, save pin and direct to verify page
+#             user = User.objects.get(username=user_pin)
+#             password_pin = RandomTokenGenerator().generatePasswordPin()
+#             print(password_pin)
+
+#             profile_obj = PersonalProfile.objects.get(user=user)
+#             print("cell ", str(profile_obj.phone_number))
+#             try:
+
+#                 if PasswordVerification.objects.filter(user_pin__exact=user_pin).exists():
+#                     PasswordVerification.objects.filter(
+#                         user_pin__exact=user_pin).update(password_pin=password_pin)
+#                     pass_pin_obj = PasswordVerification.objects.get(
+#                         user_pin__exact=user_pin)
+#                 else:
+#                     pass_pin_obj = PasswordVerification.objects.create(
+#                         user_pin=user_pin, password_pin=password_pin)
+
+#                 print(pass_pin_obj)
+#                 if pass_pin_obj:
+#                     print(pass_pin_obj.password_pin)
+#                     sms_data = send_password_pin_sms(
+#                         user.first_name, profile_obj.phone_number, pass_pin_obj.password_pin)
+#                     result = {
+#                         "status_code": 200,
+#                         "message": "",
+#                         "next_url": "/verify_code"
+#                     }
+#                     return JsonResponse(result)
+
+#             except Exception as e:
+#                 print(e)
+#                 raise e
+#                 result = {
+#                     "status_code": 400,
+#                     "message": "Cannot change password, please try again or contact Administrator",
+#                     # "next_url":"/verify_code"
+#                 }
+#                 return JsonResponse(result)
+
+#         else:
+#             result = {
+#                 "status_code": 400,
+#                 "message": "User email is invalid, Try again.",
+#                 # "next_url":"/verify_digit"
+#             }
+#             return JsonResponse(result)
+
+#     context = {}
+#     return render(request, "forgot_password.html", context)
+
+
+# def verify_code(request):
+
+#     if request.method == 'POST':
+#         post_data = json.loads(request.body.decode())
+#         print("post data:", )
+#         vcode = post_data['vcode']
+
+#         if PasswordVerification.objects.filter(password_pin__exact=vcode).exists():
+#             # send sms with pin, save pin and direct to verify page
+#             pass_v_obj = PasswordVerification.objects.get(
+#                 password_pin__exact=vcode)
+#             user_pin = pass_v_obj.user_pin
+
+#             print("yes")
+#             result = {
+#                 "status_code": 200,
+#                 "message": "",
+#                 "next_url": "/change_password/?q="+str(user_pin)+""
+#             }
+#             return JsonResponse(result)
+#         else:
+#             result = {
+#                 "status_code": 400,
+#                 "message": "Verification code is invalid, Try again.",
+#                 # "next_url":"/verify_digit"
+#             }
+#             return JsonResponse(result)
+
+#     context = {}
+#     return render(request, "verify_code.html", context)
+
+
+# def change_password(request, *args, **kwargs):
+#     user_pin = request.GET.get('q')
+#     print(user_pin)
+#     if request.method == 'POST':
+#         post_data = json.loads(request.body.decode())
+#         print("post data:", post_data)
+#         post_user_pin = post_data['pin']
+#         new_password = post_data['new_password']
+
+#         if PasswordVerification.objects.filter(user_pin__exact=post_user_pin).exists():
+#             # change password
+#             user_obj = User.objects.get(username__exact=post_user_pin)
+#             user_obj.set_password(new_password)
+#             user_obj.save()
+
+#             PasswordVerification.objects.filter(
+#                 user_pin__exact=post_user_pin).delete()
+
+#             if user_obj:
+#                 print("yes")
+#                 result = {
+#                     "status_code": 200,
+#                     "message": "",
+#                     "next_url": "/login"
+#                 }
+#                 return JsonResponse(result)
+#         else:
+#             result = {
+#                 "status_code": 400,
+#                 "message": "Invalid Password request, Try again.",
+#                 # "next_url":"/verify_digit"
+#             }
+#             return JsonResponse(result)
+
+#     context = {
+#         "user_pin": user_pin
+#     }
+#     return render(request, "change_password.html", context)

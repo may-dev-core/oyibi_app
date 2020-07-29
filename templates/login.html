@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Dashio - Bootstrap Admin Template</title>
+
+  <!-- Favicons -->
+  <link href="{% static 'images/img/favicon.png'}" rel="icon">
+  <link href="{% static 'img/apple-touch-icon.png'}" rel="apple-touch-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{% static 'lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <!--external css-->
+  <link href="{% static 'lib/font-awesome/css/font-awesome.css' %}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style-responsive.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style-page.css' %}" rel="stylesheet">
+
+
+  <script type="text/javascript" src="{% static 'lib/jquery/jquery.js' %}"></script>
+
+  <!-- =======================================================
+    Template Name: Dashio
+    Template URL: https://templatemag.com/dashio-bootstrap-admin-template/
+    Author: TemplateMag.com
+    License: https://templatemag.com/license/
+  ======================================================= -->
+</head>
+
+<body>
+  <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+  <div id="login-page">
+    <div class="container">
+      <form class="form-login" method="POST" action="">{% csrf_token %}
+        <h2 class="form-login-heading">sign in now</h2>
+        <div class="login-wrap">
+
+          <p id="message" class="server-message error" style="font-size: 12px!important;">{{message}}</p>
+
+          <input type="text" class="form-control" name="user_email" id="user_email" placeholder="Email" required
+            autofocus>
+          <br>
+          <input class="form-control input-items" type="password" name="password" id="password" value=""
+            placeholder="Password" required />
+          <label class="checkbox">
+            <!-- <input type="checkbox" value="remember-me"> Remember me -->
+            <span class="pull-right">
+              <a data-toggle="modal" href="login.html#myModal"> Forgot Password?</a>
+            </span>
+          </label>
+          <button class="btn btn-theme btn-block" id="loginButton"><i class="fa fa-lock"></i> SIGN
+            IN</button>
+          <hr>
+          <!-- <div class="login-social-link centered">
+            <p>or you can sign in via your social network</p>
+            <button class="btn btn-facebook" type="submit"><i class="fa fa-facebook"></i> Facebook</button>
+            <button class="btn btn-twitter" type="submit"><i class="fa fa-twitter"></i> Twitter</button>
+          </div> -->
+          <div class="registration">
+            Don't have an account yet?<br />
+            <a class="" href="{% url 'register' %}">
+              Create an account
+            </a>
+          </div>
+        </div>
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
+          class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Forgot Password ?</h4>
+              </div>
+              <div class="modal-body">
+                <p>Enter your e-mail address below to reset your password.</p>
+                <input type="text" name="email" placeholder="Email" autocomplete="off"
+                  class="form-control placeholder-no-fix">
+              </div>
+              <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button>
+                <button class="btn btn-theme" type="button">Submit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modal -->
+      </form>
+    </div>
+  </div>
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="{% static 'lib/bootstrap/js/bootstrap.min.js' %}"></script>
+  <!--BACKSTRETCH-->
+  <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+  <script type="text/javascript" src="{% static 'lib/jquery.backstretch.min.js' %}"></script>
+  <script>
+    $.backstretch("{% static 'images/img/login-bg.jpg' %}", {
+      speed: 500
+    });
+  </script>
+
+
+
+  <script>
+
+    var u_data;
+
+    function VerifyFields() {
+      var truePass, user_email, pass;
+
+      user_email = $("#user_email");
+      pass = $('#password');
+
+
+      if (user_email.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        // first_name.addClass('warning');
+        // if (email.include)
+        user_email.focus();
+        return;
+      }
+
+      if (pass.val().trim() == '') {
+        $('#message').html("<h5>Missing a required field</h5>");
+        pass.focus();
+        // $(this).parents('p').addClass('warning');
+        return;
+      }
+
+
+      u_data = {
+        "user_email": user_email.val(),
+        "password": pass.val(),
+        "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+        // "csrfmiddlewaretoken": '{{ csrf_token }}'
+      }
+
+
+
+    }
+
+
+
+    $("#loginButton").on("click", function (event) {
+
+      event.preventDefault();
+
+      VerifyFields();
+
+      // console.log(u_data);
+
+
+      console.log("posting...");
+      // console.log(data)
+      console.log(u_data);
+      $.ajax({
+        type: "POST",
+        url: "{% url 'login' %}",
+        data: JSON.stringify(u_data),//frm.serialize(),
+        headers: {
+          'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        dataType: "json",
+        contentType: 'application/json',
+
+        success: function (data) { //gone to the server and sever gives a response
+          // console.log(data);
+          console.log("login in");
+          $('#message').html("<h5>" + data.message + "</h5>")
+        },
+
+
+      }).done(function (data) {
+        if (data.status_code == 200) {
+          var login_data = data;
+          console.log("yes")
+          window.location.href = data.next_page;
+          // $('#success-modal-body').html(data.message);
+          // $('#successfulPaymentModal').modal('show');
+        } else {
+          console.log("stop")
+          $('#message').html("<h5>" + data.message + "</h5>")
+          // console.log(data);
+
+          // window.location.href = data.url;
+          // $( "#fail-modal-body" ).html( data.message);
+          // $('#failedPaymentModal').modal('show');
+        }
+      });
+      return false; //<---- move it here
+    });
+  </script>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

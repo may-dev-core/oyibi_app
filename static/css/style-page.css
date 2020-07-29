@@ -1,0 +1,11 @@
+.error{
+    color: red;
+}
+
+.success{
+    color: lightgreen!important;
+}
+
+  .refresh {
+    margin-right: .5%;
+  }

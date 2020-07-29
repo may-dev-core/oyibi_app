@@ -1,0 +1,133 @@
+  @font-face {
+    font-family: Poppins-Regular;
+    src: url("../fonts/poppins/Poppins-Regular.ttf");
+  }
+
+  body {
+    /*font-family: 'Roboto', sans-serif;*/
+    font-family: "Lato";
+    padding-top: 60px;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  form {
+    color: #686868;
+  }
+
+  .nav-menu-items {
+    color: #1554a3;
+  }
+
+  .nav-menu-items>a,
+  #navbar {
+    /*color: #ffffff; */
+    font-weight: bold;
+    /*padding-right: 15px;*/
+  }
+
+  #navbar-header {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  #ul-items {
+    padding-top: 0;
+  }
+
+  .navbar-toggle .icon-bar {
+    background-color: #ffffff;
+  }
+
+  .navbar-brand {
+    padding-left: 0;
+  }
+
+  /*.footer{
+    margin-top: 2%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #003300;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+
+  }*/
+
+  .server-message {
+    text-align: center;
+    color: red;
+  }
+
+  .icon-bar {
+    background-color: #1554a3 !important;
+  }
+
+  /*ul.nav a:hover { color: #000!important; }*/
+  /* @media screen and (max-device-width: 480px) {
+    #logoz{
+      margin-top: 0px!important; 
+      padding-top: 0px!important;
+      height: 25px;
+      width: 100px;
+    }
+
+    #nav-menu-items{
+      border-bottom: 1px solid #989898;
+  }
+}*/
+
+  @media (min-device-width: 200px) and (max-device-width: 768px) {
+    #logoz {
+      height: 45px;
+      width: auto;
+    }
+
+    .navbar-brand {
+      padding-left: 10px;
+      padding-top: 0.8%;
+    }
+
+    .nav-menu-items {
+      border-bottom: 1px solid #f5f5f5;
+      /*margin-top: 0%!important ;*/
+      /*border: 5px solid red;*/
+    }
+
+    .footer {
+      margin-top: 5%;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .message-col {
+      display: none;
+    }
+
+    .copy-right {
+      margin-top: 100%;
+    }
+
+    body,
+    html {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  }
+
+  .header-above p {
+    padding-top: 17px;
+    color: #1554a3;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .footer-links {
+    color: #ffffff;
+  }
+
+  .footer-links:hover {
+    color: #ffffff;
+  }
+
+
