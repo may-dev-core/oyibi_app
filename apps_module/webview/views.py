@@ -62,7 +62,7 @@ from validate_email import validate_email
 
 def homepage(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/profit_loss")
+        return HttpResponseRedirect("/dashboard")
     context = {}
     return render(request, "login.html", context)
 
@@ -71,7 +71,7 @@ def homepage(request):
 # @django_logout
 def login(request, *args, **kwargs):
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/profit_loss")
+        return HttpResponseRedirect("/dashboard")
 
     message = ""
     result = ""
@@ -89,25 +89,25 @@ def login(request, *args, **kwargs):
             user_reg = authenticate(username=user_email, password=password)
             if user_reg is not None:
                 if user_reg.is_active:
-                    if user_reg.is_staff:
+                    # if user_reg.is_staff:
 
-                        auth_login(request, user_reg)
-                        print("user staff logged in")
-                        result = {
-                            "status_code": 200,
-                            "message": message,
-                            "next_url": "/backend_dashboard"
-                        }
-                        return JsonResponse(result)
-                    else:
-                        auth_login(request, user_reg)
-                        print("user logged in")
-                        result = {
-                            "status_code": 200,
-                            "message": message,
-                            "next_page": "/profit_loss"
-                        }
-                        return JsonResponse(result)
+                    #     auth_login(request, user_reg)
+                    #     print("user staff logged in")
+                    #     result = {
+                    #         "status_code": 200,
+                    #         "message": message,
+                    #         "next_url": "/dashboard"
+                    #     }
+                    #     return JsonResponse(result)
+                    # else:
+                    auth_login(request, user_reg)
+                    print("user logged in")
+                    result = {
+                        "status_code": 200,
+                        "message": message,
+                        "next_page": "/dashboard"
+                    }
+                    return JsonResponse(result)
             else:
                 message = "User email or password is incorrect"
                 result = {
@@ -190,7 +190,7 @@ def register(request, *args, **kwargs):
                             result = {
                                 "status_code": 200,
                                 "message": message,
-                                "next_page": "/profit_loss",
+                                "next_page": "/dashboard",
                             }
                             return JsonResponse(result)
                             # return HttpResponseRedirect("/dashboard")
@@ -225,7 +225,8 @@ def dashboard(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect("/")
     elif(request.user.is_staff):
-        return HttpResponseRedirect("/backend_dashboard")
+        # return HttpResponseRedirect("/backend_dashboard")
+        pass
     else:
         pass
 
@@ -265,7 +266,7 @@ def company_profile(request, *args, **kwargs):
             result = {
                 "status_code": 200,
                 "message": "",
-                "next_page": "/profit_loss"
+                "next_page": "/dashboard"
             }
         return JsonResponse(result)
 

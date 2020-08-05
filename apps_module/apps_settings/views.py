@@ -1,189 +1,139 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, HttpResponseRedirect
-from .forms import (VehicleTypeForm,
-                    VehiclePurposeForm,
-                    EmployeeForm)
 from apps_module.company.models import CompanyProfile
-from apps_module.apps_settings.models import (VehicleType,
-                                              VehicleFuelType,
-                                              VehiclePurpose,
-                                              VehicleStatus,
-                                              Employee)
+from apps_module.apps_settings.models import (Position, Department, Employee, CarType)
+from apps_module.apps_settings.forms import (PositionForm, DepartmentForm, EmployeeForm, CarTypeForm)
+
 # Create your views here.
 
 
-def vehicle_settings(request):
+#  =============  position ============
+def position(request):
     user = request.user
     company_profile_obj = CompanyProfile.objects.get(user=user)
-    obj = VehicleType.objects.filter(company=company_profile_obj)
-    vehicle_purpose_obj = VehiclePurpose.objects.filter(
+    obj = Position.objects.filter(
         company=company_profile_obj)
-
-    form = VehicleTypeForm(request.POST or None)
-    vehicle_purpose_form = VehiclePurposeForm(request.POST or None)
+    form = PositionForm(request.POST or None)
 
     if request.method == "POST":
         print(request.POST)
         if form.is_valid():
             post_data = request.POST
-            vehicle_type = form.cleaned_data['vehicle_type']
+            try:
+                position_name = form.cleaned_data['position_name']
 
-            print(vehicle_type)
-            VehicleType(company=company_profile_obj,
-                        vehicle_type=vehicle_type).save()
+                Position(company=company_profile_obj,
+                        position_name=position_name
+                        ).save()
+            except Exception as e:
+                print(e)
 
             print("success")
+        return HttpResponseRedirect('/position')
 
     context = {
         "form": form,
         "obj": obj,
-        "vehicle_purpose_form": vehicle_purpose_form,
-        "vehicle_purpose_obj": vehicle_purpose_obj,
     }
-    return render(request, 'vehicle_settings.html', context)
+    return render(request, 'position.html', context)
 
 
-def add_vehicle_type(request):
+def edit_position(request, id):
     user = request.user
     company_profile_obj = CompanyProfile.objects.get(user=user)
-    obj = VehicleType.objects.filter(company=company_profile_obj)
-    form = VehicleTypeForm(request.POST or None)
+    obj = Position.objects.filter(company=company_profile_obj)
+    instance = get_object_or_404(Position, id=id)
+
+    print("------ ", instance)
+
+    form = PositionForm(request.POST or None, instance=instance)
 
     if request.method == "POST":
         print(request.POST)
         if form.is_valid():
             post_data = request.POST
-            vehicle_type = form.cleaned_data['vehicle_type']
+            try:
+                position_name = form.cleaned_data['position_name']
 
-            print(vehicle_type)
-            VehicleType(company=company_profile_obj,
-                        vehicle_type=vehicle_type).save()
+                Position.objects.filter(id=id).update(
+                        position_name=position_name
+                        )
+            except Exception as e:
+                print(e)
 
             print("success")
-        return HttpResponseRedirect('/vehicle_settings')
+        return HttpResponseRedirect('/position')
 
     context = {
         "form": form,
         "obj": obj,
     }
-    return render(request, 'vehicle_settings.html', context)
+    return render(request, 'position_edit.html', context)
 
 
-def edit_vehicle_type(request, pid):
+
+#  =============  department ============
+def department(request):
     user = request.user
-    instance = get_object_or_404(VehicleType, id=pid)
     company_profile_obj = CompanyProfile.objects.get(user=user)
-    obj = VehicleType.objects.filter(company=company_profile_obj)
-    vehicle_purpose_obj = VehiclePurpose.objects.filter(
+    obj = Department.objects.filter(
         company=company_profile_obj)
-    edit_form = VehicleTypeForm(request.POST or None, instance=instance)
+    form = DepartmentForm(request.POST or None)
 
     if request.method == "POST":
         print(request.POST)
-        if edit_form.is_valid():
+        if form.is_valid():
             post_data = request.POST
-            vehicle_type = edit_form.cleaned_data['vehicle_type']
+            try:
+                department_name = form.cleaned_data['department_name']
 
-            print(vehicle_type)
-            VehicleType.objects.filter(id=pid).update(
-                vehicle_type=vehicle_type)
-
-            print("---updated---")
-            return HttpResponseRedirect('/vehicle_settings')
-
-    context = {
-        "form": edit_form,
-        "obj": obj,
-        "vehicle_purpose_obj": vehicle_purpose_obj,
-
-    }
-    return render(request, 'vehicle_settings.html', context)
-
-
-def delete_vehicle_type(request):
-    post_obj = request.POST.getlist("items")
-    print("post_obj")
-    if request.method == "POST":
-        for item in post_obj:
-            # print emails
-            VehicleType.objects.get(id=item).delete()
-            print('deleted')
-        return HttpResponseRedirect('/vehicle_settings')
-
-
-# ================================================================
-
-
-def add_vehicle_purpose(request):
-    user = request.user
-    company_profile_obj = CompanyProfile.objects.get(user=user)
-    vehicle_purpose_obj = VehiclePurpose.objects.filter(
-        company=company_profile_obj)
-    vehicle_purpose_form = VehiclePurposeForm(request.POST or None)
-
-    form = VehicleTypeForm(request.POST or None)
-
-    if request.method == "POST":
-        print(request.POST)
-        if vehicle_purpose_form.is_valid():
-            post_data = request.POST
-            purpose_name = vehicle_purpose_form.cleaned_data['purpose_name']
-
-            print(purpose_name)
-            VehiclePurpose(company=company_profile_obj,
-                           purpose_name=purpose_name).save()
+                Department(company=company_profile_obj,
+                        department_name=department_name
+                        ).save()
+            except Exception as e:
+                print(e)
 
             print("success")
-        return HttpResponseRedirect('/vehicle_settings')
+        return HttpResponseRedirect('/department')
 
     context = {
-        "vehicle_purpose_form": vehicle_purpose_form,
-        "vehicle_purpose_obj": vehicle_purpose_obj,
+        "form": form,
+        "obj": obj,
     }
-    return render(request, 'vehicle_settings.html', context)
+    return render(request, 'department.html', context)
 
 
-def edit_vehicle_purpose(request, id):
+def edit_department(request, id):
     user = request.user
-    instance = get_object_or_404(VehiclePurpose, id=id)
     company_profile_obj = CompanyProfile.objects.get(user=user)
-    obj = VehicleType.objects.filter(company=company_profile_obj)
-    vehicle_purpose_obj = VehiclePurpose.objects.filter(
-        company=company_profile_obj)
-    edit_vehicle_purpose_form = VehiclePurposeForm(
-        request.POST or None, instance=instance)
+    obj = Department.objects.filter(company=company_profile_obj)
+    instance = get_object_or_404(Department, id=id)
+
+    print("------ ", instance)
+
+    form = DepartmentForm(request.POST or None, instance=instance)
 
     if request.method == "POST":
         print(request.POST)
-        if edit_vehicle_purpose_form.is_valid():
+        if form.is_valid():
             post_data = request.POST
-            purpose_name = edit_vehicle_purpose_form.cleaned_data['purpose_name']
+            try:
+                department_name = form.cleaned_data['department_name']
 
-            print(purpose_name)
-            VehiclePurpose.objects.filter(id=id).update(
-                purpose_name=purpose_name)
+                Department.objects.filter(id=id).update(
+                        department_name=department_name
+                        )
+            except Exception as e:
+                print(e)
 
-            print("---updated---")
-            return HttpResponseRedirect('/vehicle_settings')
+            print("success")
+        return HttpResponseRedirect('/department')
 
     context = {
-
+        "form": form,
         "obj": obj,
-        "vehicle_purpose_form": edit_vehicle_purpose_form,
-        "vehicle_purpose_obj": vehicle_purpose_obj,
     }
-    return render(request, 'vehicle_settings.html', context)
-
-
-def delete_vehicle_purpose(request):
-    post_obj = request.POST.getlist("items")
-    print("post_obj")
-    if request.method == "POST":
-        for item in post_obj:
-            # print emails
-            VehiclePurpose.objects.get(id=item).delete()
-            print('deleted')
-        return HttpResponseRedirect('/vehicle_settings')
+    return render(request, 'department_edit.html', context)
 
 
 # =================================================================
@@ -199,9 +149,10 @@ def employee(request):
     # form = VehicleTypeForm(request.POST or None)
 
     if request.method == "POST":
-        print(request.POST)
+        # print(request.POST)
         if employee_form.is_valid():
-            post_data = request.POST
+            # post_data = request.POST
+            print(request.POST)
             try:
                 employee_id = employee_form.cleaned_data['employee_id']
                 first_name = employee_form.cleaned_data['first_name']
@@ -212,6 +163,7 @@ def employee(request):
                 phone_number_1 = employee_form.cleaned_data['phone_number_1']
                 phone_number_2 = employee_form.cleaned_data['phone_number_2']
                 position = employee_form.cleaned_data['position']
+                department = employee_form.cleaned_data['department']
 
                 Employee(company=company_profile_obj,
                         employee_id=employee_id,
@@ -223,18 +175,22 @@ def employee(request):
                         phone_number_1=phone_number_1,
                         phone_number_2=phone_number_2,
                         position=position,
+                        department=department,
+
                         ).save()
+                
             except Exception as e:
                 print(e)
+                raise e
 
             print("success")
         return HttpResponseRedirect('/employee')
 
     context = {
-        "employee_form": employee_form,
-        "employee_obj": employee_obj,
+        "form": employee_form,
+        "obj": employee_obj,
     }
-    return render(request, 'employee_settings.html', context)
+    return render(request, 'employee.html', context)
 
 
 def edit_employee(request, id):
@@ -243,7 +199,7 @@ def edit_employee(request, id):
     employee_obj = Employee.objects.filter(
         company=company_profile_obj)
     instance = get_object_or_404(Employee, id=id)
-    edit_employee_form = EmployeeForm(request.POST or None, instance)
+    edit_employee_form = EmployeeForm(request.POST or None, instance=instance)
 
     # form = VehicleTypeForm(request.POST or None)
 
@@ -261,6 +217,7 @@ def edit_employee(request, id):
                 phone_number_1 = edit_employee_form.cleaned_data['phone_number_1']
                 phone_number_2 = edit_employee_form.cleaned_data['phone_number_2']
                 position = edit_employee_form.cleaned_data['position']
+                department = edit_employee_form.cleaned_data['department']
 
                 Employee.objects.filter(id=id).update(company=company_profile_obj,
                          employee_id=employee_id,
@@ -272,6 +229,7 @@ def edit_employee(request, id):
                          phone_number_1=phone_number_1,
                          phone_number_2=phone_number_2,
                          position=position,
+                         department=department,
                          )
             except Exception as e:
                 print(e)
@@ -280,10 +238,14 @@ def edit_employee(request, id):
         return HttpResponseRedirect('/employee')
 
     context = {
-        "employee_form": edit_employee_form,
-        "employee_obj": employee_obj,
+        "form": edit_employee_form,
+        "obj": employee_obj,
     }
-    return render(request, 'employee_settings.html', context)
+    return render(request, 'employee_edit.html', context)
+
+
+
+
 
 
 
@@ -319,12 +281,75 @@ def edit_employee(request, id):
 #     return render(request, 'vehicle_settings.html', context)
 
 
-def delete_employee(request):
-    post_obj = request.POST.getlist("items")
-    print("post_obj")
+# def delete_employee(request):
+#     post_obj = request.POST.getlist("items")
+#     print("post_obj")
+#     if request.method == "POST":
+#         for item in post_obj:
+#             # print emails
+#             Employee.objects.get(id=item).delete()
+#             print('deleted')
+#         return HttpResponseRedirect('/employee')
+
+
+def cartype(request):
+    user = request.user
+    company_profile_obj = CompanyProfile.objects.get(user=user)
+    obj = CarType.objects.filter(
+        company=company_profile_obj)
+    form = CarTypeForm(request.POST or None)
+
     if request.method == "POST":
-        for item in post_obj:
-            # print emails
-            VehiclePurpose.objects.get(id=item).delete()
-            print('deleted')
-        return HttpResponseRedirect('/vehicle_settings')
+        print(request.POST)
+        if form.is_valid():
+            post_data = request.POST
+            try:
+                car_type = form.cleaned_data['car_type']
+
+                CarType(company=company_profile_obj,
+                        car_type=car_type
+                        ).save()
+            except Exception as e:
+                print(e)
+
+            print("success")
+        return HttpResponseRedirect('/cartype')
+
+    context = {
+        "form": form,
+        "obj": obj,
+    }
+    return render(request, 'car_type.html', context)
+
+
+def edit_cartype(request, id):
+    user = request.user
+    company_profile_obj = CompanyProfile.objects.get(user=user)
+    obj = CarType.objects.filter(company=company_profile_obj)
+    instance = get_object_or_404(CarType, id=id)
+
+    print("------ ", instance)
+
+    form = CarTypeForm(request.POST or None, instance=instance)
+
+    if request.method == "POST":
+        print(request.POST)
+        if form.is_valid():
+            post_data = request.POST
+            try:
+                car_type = form.cleaned_data['car_type']
+
+                CarType.objects.filter(id=id).update(
+                        car_type=car_type
+                        )
+            except Exception as e:
+                print(e)
+
+            print("success")
+        return HttpResponseRedirect('/cartype')
+
+    context = {
+        "form": form,
+        "obj": obj,
+    }
+    return render(request, 'car_type_edit.html', context)

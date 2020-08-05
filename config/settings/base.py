@@ -55,16 +55,17 @@ INSTALLED_APPS = [
     'apps_module.account',
     'apps_module.api',
     'apps_module.company',
-    'apps_module.staff',
-    'apps_module.vehicle',
     'apps_module.user_profiles',
     'apps_module.user_account',
     'apps_module.apps_settings',
+    'apps_module.washing_bay',
     'whitenoise',
 
 ]
 
 # AUTH_USER_MODEL = 'user_account.User'
+
+LOGIN_URL = "/login/"
 
 SITE_ID = 1
 
@@ -187,3 +188,4 @@ STATICFILES_DIRS = (
 
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+

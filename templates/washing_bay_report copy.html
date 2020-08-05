@@ -1,0 +1,502 @@
+{% extends "dashboard_base.html" %}
+{% load static %}
+
+{% block title %}Profit & Loss{% endblock title %}
+
+{% block content%}
+
+<style>
+  .success {
+    color: rgb(9, 150, 9) !important;
+  }
+
+  .refresh {
+    margin-right: .5%;
+  }
+
+  th {
+    white-space: nowrap;
+  }
+  .tfooter{
+    border: 0;
+  }
+</style>
+
+
+
+<h3><i class="fa fa-angle-right"></i> Accounts/Profit & Loss</h3>
+<!-- BASIC FORM ELELEMNTS -->
+
+<!-- /row -->
+<!-- INLINE FORM ELELEMNTS -->
+
+
+<!-- class Income(models.Model):
+date_of_income = models.DateField()
+vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+amount = models.FloatField()
+source_of_income = models.ForeignKey(
+SourceOfIncome, on_delete=models.CASCADE)
+income_description = models.TextField(blank=True, null=True)
+date_added = models.DateTimeField(auto_now_add=True, auto_now=False)
+date_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
+
+def __str__(self):
+return str(self.source_of_income) -->
+
+
+
+
+<div class="row mt">
+  <div class="col-lg-12">
+    <div class="form-panel">
+      <h4 class="mb"><i class="fa fa-angle-right"></i> View Profit & Loss
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type=""
+            value="Refresh">Vehicle</a></span>
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type="" value="Refresh">By
+            attendant</a></span>
+
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type="" value="Refresh">Daily
+            Sales</a></span>
+      </h4>
+
+      <form class="form-inline" role="form">{% csrf_token %}
+
+        <p id="message" class="server-message error" style="font-size: 12px!important;">{{message}}</p>
+        <p id="message-success" class="server-message success" style="font-size: 12px!important;">{{message}}</p>
+
+        <div class="form-group">
+          <!-- <label class="control-label col-md-3">Default Datepicker</label> -->
+          <label class="" for="">Select Date From:</label><br>
+
+          <!-- <div class="col-md-3 col-xs-11"> -->
+          <input class="form-control form-control-inline input-medium default-date-picker" name="date_from"
+            id="date_from" size="16" type="text" value="">
+
+
+          <!-- <input class="form-control form-control-inline input-medium" name="start_date" id="start_date" style="" type="text" placeholder="Start Date" required> -->
+          <!-- <span class="help-block">Select date</span> -->
+          <!-- </div> -->
+        </div>
+
+
+        <div class="form-group">
+          <!-- <label class="control-label col-md-3">Default Datepicker</label> -->
+          <label class="" for="">Select Date To:</label><br>
+
+          <!-- <div class="col-md-3 col-xs-11"> -->
+          <input class="form-control form-control-inline input-medium default-date-picker" name="date_to" id="date_to"
+            size="16" type="text" value="">
+
+
+          <!-- <input class="form-control form-control-inline input-medium" name="start_date" id="start_date" style="" type="text" placeholder="Start Date" required> -->
+          <!-- <span class="help-block">Select date</span> -->
+          <!-- </div> -->
+        </div>
+
+
+
+        <div class="form-group">
+          <label class="" for="vehicle">Vehicle</label><br>
+          <select class="form-control" name="vehicle" id="vehicle">
+            <option value="--Select--">--Select--</option>
+            <option value="all">All</option>
+            {% for vehicle in company_vehicle_obj %}
+            <option value="">{{ vehicle.vehicle_registration_no }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+        <!-- <div class="form-group">
+          <label class="" for="income_description">Amount</label><br>
+          <input class="form-control" type="number" name="amount" id="amount" value="" placeholder="Amount" required />
+
+        </div> -->
+
+        <!-- <div class="form-group">
+          <label class="" for="type_of_expenditure">Expenditure Type</label><br>
+          <select class="form-control" name="type_of_expenditure" id="type_of_expenditure">
+            <option value="--Select--">--Select--</option>
+            {% for expense in type_of_expenditure_obj %}
+            <option value="{{ expense.id }}">{{ expense.type_of_expense }}</option>
+            {% endfor %}
+          </select>
+          </select>
+        </div> -->
+
+
+        <div class="form-group">
+          <!-- <label class="" for="description">Expenditure Description</label><br>
+          <input class="form-control" type="text" name="description" id="description" value="" placeholder="Description"
+            required /> -->
+
+          <!-- <button type="submit" class="btn btn-theme">Save</button> -->
+          <!-- <a href="#" id="btn_save_income" class="btn btn-theme" type="" value="Save" onclick="VerifyFields()">Save</a> -->
+        </div>
+
+
+
+        <div class="form-group">
+          <label class="" for="income_description"></label><br>
+          <!-- <input class="form-control" type="text" name="receipt_number" id="receipt_number" value=""
+            placeholder="Receipt Number" required /> -->
+
+          <!-- <button type="submit" class="btn btn-theme">Save</button> -->
+          <a href="#" id="btn_save_expense" class="btn btn-theme" type="" value="Save"
+            onclick="VerifyFields()">Search</a>
+        </div>
+
+
+        <!-- <button type="submit" class="btn btn-theme">Sign in</button> -->
+
+      </form>
+    </div>
+    <!-- /form-panel -->
+  </div>
+  <!-- /col-lg-12 -->
+</div>
+
+
+
+
+
+<div class="table-responsive" style="height: 100vh; overflow-y: scroll;">
+  <table id="id_reg_table" class="table table-striped table-sm table-responsive datatblHeading" border="1"
+    cellpadding="1" cellspacing="" style="font-size: 13px;">
+    <thead style="font-size: 14px!important; font-weight: bold!important; background-color: #67cae9; ">
+
+      <tr>
+        <th>#</th>
+        <!-- <th>System ID</th> -->
+        <!-- <th>Date</th> -->
+        <th>Reg. Number</th>
+        <th>Car Type</th>
+        <th>Amount</th>
+        <th>Attendant</th>
+        <!-- <th>+Profit / -Loss</th> -->
+        <!-- <th>Receipt Number</th> -->
+      </tr>
+
+    </thead>
+
+    <!-- <tfoot>
+      <tr>
+        <th>Seq.</th>
+        <th>Name</th>
+        <th>Position</th>
+        <th>Salary</th>
+        <th>Salary</th>
+      </tr>
+    </tfoot> -->
+
+    <tbody>
+
+
+
+    </tbody>
+
+  </table>
+</div>
+
+
+
+
+
+<script>
+
+  $(function () {
+    // window.prettyPrint && prettyPrint();
+    // start date
+
+    // $('input[name="date_of_expense"]').datepicker({
+    //   format: 'dd-mm-yyyy',
+    //   autoclose: true
+    // });
+
+
+    // $('input[name="date_of_income"]').datepicker({
+    //   format: 'dd-mm-yyyy',
+    // });
+
+    $('input[name="date_from"]').datepicker({
+      format: 'dd-mm-yyyy',
+    });
+
+    $('input[name="date_to"]').datepicker({
+      format: 'dd-mm-yyyy',
+    });
+  });
+
+  var u_data;
+
+  function VerifyFields() {
+
+
+
+
+
+    var date_from, date_to, vehicle;
+
+    date_from = $('input[name=date_from]');
+    date_to = $('input[name=date_to]');
+    vehicle = $("#vehicle");
+
+
+    console.log($('#id_reg_table'))
+
+
+    if (date_from.val() == '') {
+      $('#message').html("<h5>Missing a required field</h5>");
+      $('#message-success').html("<h5>" + "" + "</h5>");
+      // first_name.addClass('warning');
+      date_from.focus();
+      return;
+    }
+
+
+    if (date_to.val() == '') {
+      $('#message').html("<h5>Missing a required field</h5>");
+      $('#message-success').html("<h5>" + "" + "</h5>");
+      // first_name.addClass('warning');
+      date_to.focus();
+      return;
+    }
+
+    if (vehicle.val() == "--Select--") {
+      $('#message').html("<h5>Missing a required field</h5>");
+      $('#message-success').html("<h5>" + "" + "</h5>");
+      // first_name.addClass('warning');
+      vehicle.focus();
+      return;
+    }
+
+
+
+    u_data = {
+      "date_from": date_from.val(),
+      "date_to": date_to.val(),
+      "vehicle": vehicle.val(),
+
+      "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+      // "csrfmiddlewaretoken": '{{ csrf_token }}'
+    }
+
+
+    console.log(u_data)
+
+    submitForm();
+
+  }
+
+  function submitForm() {
+
+    console.log("posting...")
+    console.log(u_data)
+
+    $.ajax({
+      type: "POST",
+      url: "",//getBaseUrl()+"/api/v1/register/create_user/",
+      data: JSON.stringify(u_data),
+      headers: {
+        'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+      },
+      dataType: "json",
+      contentType: 'application/json',
+
+      success: function (data) { //gone to the server and sever gives a response
+        console.log("hello");
+        // $('#message').html("<h5>" + data.message + "</h5>");
+        // $('#message').removeClass("error");
+        // $('#message').addClass("success");
+        // $('#message').html("<h5>" + data.message + "</h5>");
+        // $('#Modal_terms_conditions').modal('hide');
+        if (data.status_code == 400) {
+          $('#Modal_terms_conditions').modal('hide');
+          // $('#message').html("<h5>" +data.message+"</h5>");
+        }
+      },
+
+
+    }).done(function (data) {
+      console.log("Data" + data);
+      if (data.status_code == 200) {
+        // var reg_data = data;
+
+        // console.log(data.data)
+
+        $('#message-success').html("<h5>" + data.message + "</h5>");
+        $('#message').html("<h5>" + "" + "</h5>");
+
+        // $('input[name=amount]').val("");
+
+        drawTable(data.data);
+
+        // setTimeout(function () {// wait for 5 secs(2)
+        //   location.reload(); // then reload the page.(3)
+        // }, 100);
+
+        // $('#success-modal-body').html(data.message);
+        // $('#successfulPaymentModal').modal('show');
+      } else if (data.status_code == 400) {
+        // $('#Modal_terms_conditions').modal('hide');
+        $('#message').html("<h5>" + data.message + "</h5>");
+        $('#message-success').html("<h5>" + "" + "</h5>");
+
+        // upline_id.focus();
+      } else {
+        console.log("stop");
+        $('#message').html("<h5>" + data.message + "</h5>");
+        $('#message-success').html("<h5>" + "" + "</h5>");
+
+      }
+    });
+
+  }
+
+
+
+
+
+  var array_obj = {{ bay_array| safe}};
+
+
+
+  // window.onload = drawTable(array_obj);
+  $(document).ready(function () {
+    $("#id_reg_table").append('<tfoot><th class="tfooter"></th> <th  class="tfooter"></th> <th class="tfooter"></th> <th class=""></th> <th class="tfooter"></th> </tfoot>');
+    
+    drawTable(array_obj);
+
+  });
+
+
+  function drawTable(obj) {
+
+    var obj = obj;
+
+    console.log(obj)
+    // var obj = obj;
+    var t = $('#id_reg_table').DataTable({
+
+      "lengthMenu": [[10, 25, 50, 100, 500, 1000, 5000, 10000, -1], [10, 25, 50, 100, 500, 1000, 5000, 10000, "All"]],
+      "columnDefs": [{
+        "searchable": true,
+        "orderable": true,
+        "targets": 0
+      }],
+      "rowReorder": {
+        enable: true,
+        dataSrc: 'readingOrder'
+      },
+      "order": [[1, 'asc']],
+      "bDestroy": true,
+
+      data: obj,
+      columns: [
+        { title: "#" },
+        // { title: "Sys. ID" },
+        // { title: "Date" },
+        { title: "Reg. Number" },
+        { title: "Car Type" },
+        { title: "Amount" },
+        { title: "Attendant" },
+        // { title: "+Profit / -Loss" },
+
+
+        // { title: "July" },
+        // { title: "August" },
+        // { title: "September" },
+        // { title: "October" },
+        // { title: "November" },
+        // { title: "December" }
+      ],
+
+      "footerCallback": function (row, data, start, end, display) {
+
+        // "footerCallback": function(tfoot, data, start, end, display) {
+        // $(tfoot).find('th').eq(0).html("Starting index is " + start);
+        // }
+
+
+        var api = this.api(), data;
+        // Total over this page
+
+        // Remove the formatting to get integer data for summation
+        var intVal = function (i) {
+          return typeof i === 'string' ?
+            i.replace(/[\$,]/g, '') * 1 :
+            typeof i === 'number' ?
+              i : 0;
+        };
+
+
+        // Total over all pages
+        var total = api
+          .column(3)
+          .data()
+          .reduce(function (a, b) {
+            return intVal(a) + intVal(b);
+          }, 0);
+
+
+
+        var pageTotal = api
+          .column(3, { page: 'current' })
+          .data()
+          .reduce(function (a, b) {
+            return intVal(a) + intVal(b);
+          }, 0);
+
+        // Update footer
+        $(api.column(3).footer()).html(
+          'Total:   ' + total
+          // '$'+pageTotal +' ( $'+ total +' total)'
+        );
+
+        console.log(total)
+
+      }
+
+
+
+
+    });
+
+    // t.draw();
+
+    t.on('order.dt search.dt', function () {
+      t.column(0, {
+        search: 'applied',
+        order: 'applied'
+      })
+        .nodes()
+        .each(function (cell, i) {
+          cell.innerHTML = i + 1;
+        });
+    }).draw();
+
+
+
+  };
+
+  var t = $('#id_reg_table').DataTable();
+
+  $('#id_reg_table').on('click', 'tbody tr', function () {
+    t.row(this).delete({
+      buttons: [
+        { label: 'Cancel', fn: function () { this.close(); } },
+        'Delete'
+      ]
+    });
+  });
+
+
+
+
+</script>
+
+
+
+
+{% endblock%}

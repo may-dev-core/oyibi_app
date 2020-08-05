@@ -48,8 +48,11 @@
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
       <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.4/css/buttons.dataTables.min.css">
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.4/js/dataTables.buttons.min.js"></script> -->
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script> 
   
   <script src="{% static 'lib/chart-master/Chart.js' %}"></script>
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
@@ -285,7 +288,7 @@
           <!-- <p class="centered"><a href="profile.html"><img src="img/ui-sam.jpg" class="img-circle" width="80"></a></p> -->
           <h5 class="centered">{{company_name}}</h5>
           <li class="mt">
-            <a class="active" href="{% url 'profit_loss' %}">
+            <a class="active" href="">
               <i class="fa fa-dashboard"></i>
               <span>Dashboard</span>
             </a>
@@ -296,9 +299,9 @@
               <span>Accounts</span>
             </a>
             <ul class="sub">
-              <li><a href="{% url 'income' %}">Income</a></li>
-              <li><a href="{% url 'expenses' %}">Expenditure</a></li>
-              <li><a href="{% url 'profit_loss' %}">Profit & Loss</a></li>
+              <li><a href="">Income</a></li>
+              <li><a href="">Expenditure</a></li>
+              <li><a href="">Profit & Loss</a></li>
               <!-- <li><a href="font_awesome.html">Font Awesome</a></li> -->
             </ul>
           </li>
@@ -308,32 +311,36 @@
               <span>Settings</span>
             </a>
             <ul class="sub">
-              <li><a href="{% url 'vehicle' %}">Vehicle</a></li>
-              <!-- <li><a href="{% url 'employee' %}">Employee</a></li> -->
-              <!-- <li><a href="gallery.html">Gallery</a></li>
+              <li><a href="{% url 'position' %}">Position</a></li>
+              <li><a href="{% url 'department' %}">Department</a></li>
+              <li><a href="{% url 'employee' %}">Employee</a></li>
+              <li><a href="{% url 'cartype' %}">Car Type</a></li>
+              <li><a href="{% url 'washing_bay_prices' %}">Washing Bay Prices</a></li>
+
+              <!-- <li><a href="gallery.html">washing_bay_prices</a></li>
               <li><a href="todo_list.html">Todo List</a></li>
               <li><a href="dropzone.html">Dropzone File Upload</a></li>
               <li><a href="inline_editor.html">Inline Editor</a></li>
               <li><a href="file_upload.html">Multiple File Upload</a></li> -->
             </ul>
           </li>
-          <!-- <li class="sub-menu">
-            <a href="javascript:;">
+          <li class="sub-menu">
+            <a href="{% url 'washing_bay_sales' %}">
               <i class="fa fa-book"></i>
-              <span>Extra Pages</span>
+              <span>Washing Bay Sales</span>
             </a>
             <ul class="sub">
-              <li><a href="blank.html">Blank Page</a></li>
-              <li><a href="login.html">Login</a></li>
+              <li><a href="#">Bay Reports</a></li>
+              <!-- <li><a href="login.html">Login</a></li>
               <li><a href="lock_screen.html">Lock Screen</a></li>
               <li><a href="profile.html">Profile</a></li>
               <li><a href="invoice.html">Invoice</a></li>
               <li><a href="pricing_table.html">Pricing Table</a></li>
               <li><a href="faq.html">FAQ</a></li>
               <li><a href="404.html">404 Error</a></li>
-              <li><a href="500.html">500 Error</a></li>
+              <li><a href="500.html">500 Error</a></li> -->
             </ul>
-          </li> -->
+          </li>
           <!-- <li class="sub-menu">
             <a href="javascript:;">
               <i class="fa fa-tasks"></i>
@@ -413,7 +420,7 @@
     <footer class="site-footer">
       <div class="text-center">
         <p>
-          &copy; Copyrights <strong>Maycal Systems</strong>. All Rights Reserved
+          &copy; Copyrights <strong>FinApp Systems</strong>. All Rights Reserved
         </p>
         <div class="credits">
           <!--
@@ -503,7 +510,7 @@
                 // window.prettyPrint && prettyPrint();
                 // start date
 
-                $('input[name="date_of_expense"]').datepicker({
+                $('input[name="date_of_birth"]').datepicker({
                   format: 'dd-mm-yyyy',
                   autoclose: true
                 });
@@ -520,6 +527,13 @@
                 $('input[name="date_to"]').datepicker({
                   format: 'dd-mm-yyyy',
                 });
+
+                // washing bay sales date
+                $('input[name="date"]').datepicker({
+                  format: 'dd-mm-yyyy',
+                });
+
+
               });
 
 

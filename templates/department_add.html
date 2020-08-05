@@ -1,7 +1,7 @@
 {% extends "dashboard_base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Expenditure{% endblock title %}
+{% block title %}Department{% endblock title %}
 
 {% block content%}
 
@@ -9,12 +9,24 @@
   .success {
     color: rgb(9, 150, 9) !important;
   }
+
+  .refresh {
+    margin-right: .5%;
+  }
 </style>
 
 
 
-<h3><i class="fa fa-angle-right"></i> Settings/Employee 
-  <span><a href="{% url 'vehicle_settings' %}" id="btn_refresh" class="btn btn-theme pull-right" type="" value="Refresh" >Refresh</a></span></h3> 
+<h3><i class="fa fa-angle-right"></i> Settings/Department(s)
+  <!-- <span><a href="" id="btn_refresh" class="btn btn-theme pull-right" type="" value="Refresh" >Reload</a></span>
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type=""
+            value="Refresh">Profit & Loss</a></span>
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type=""
+            value="Refresh">Income</a></span>
+        
+        <span><a href="" id="refresh" class="btn btn-theme pull-right refresh" type=""
+            value="Refresh">Expenses</a></span> -->
+</h3>
 <!-- BASIC FORM ELELEMNTS -->
 
 <!-- /row -->
@@ -61,18 +73,18 @@ return str(self.source_of_income) -->
   <div class="row mt">
     <div class="col-lg-6">
       <div class="content-panel">
-        <h4><i class="fa fa-angle-right"></i> Add Employee</h4>
+        <h4><i class="fa fa-angle-right"></i> Add Department</h4>
         <div class="panel-body">
 
-          <form class="" method="POST" role="form" action="{% url 'employee' %}">{% csrf_token %}
+          <form class="" method="POST" role="form" action="{% url 'department' %}">{% csrf_token %}
 
             <p id="message" class="server-message error" style="font-size: 12px!important;">{{message}}</p>
             <p id="message-success" class="server-message success" style="font-size: 12px!important;">{{message}}</p>
 
-            {{ employee_form|crispy }}
+            {{ form|crispy }}
             <!-- <br> -->
 
-            <button type="submit" class="btn btn-theme" style="margin-top: 3%;">Add/Edit</button>
+            <button type="submit" class="btn btn-theme" style="margin-top: 3%;">Save</button>
 
           </form>
 
@@ -84,20 +96,20 @@ return str(self.source_of_income) -->
     <div class="col-lg-6">
       <div class="content-panel">
         <legend>
-        <h4><i class="fa fa-angle-right"></i> Employee(s)</h4>
+          <h4><i class="fa fa-angle-right"></i> Department(s)</h4>
         </legend>
         <div class="panel-body">
           <!-- <div id="chart-3" class="chart"></div> -->
-          <form method="post" action="{% url 'delete_vehicle_type' %}" id="site_delete_form">
+          <form method="post" action="" id="site_delete_form">
             {% csrf_token %}
-            
-              <!-- <h4>Manage Vehicle Types(s)</h4> -->
-       
+
+            <!-- <h4>Manage Vehicle Types(s)</h4> -->
+
             <ul class=""
               style="text-align: left; padding-left:20px; padding-right:20px; padding-bottom: 20px; list-style-type:none; ">
 
-              <div style="overflow-y: scroll; overflow-x: hidden; /*border: 1px solid black;*/ height: 100px">
-                {%for obj in employee_obj%}
+              <div style="overflow-y: scroll; overflow-x: hidden; /*border: 1px solid black;*/ height: 350px">
+                {%for obj in obj%}
                 <li style=" border-bottom: 1px solid #A4A4A4; padding-top: 10px; ">
                   <table>
                     <tbody>
@@ -105,13 +117,13 @@ return str(self.source_of_income) -->
                         <td width="100%">
                           <h5>
                             <label>
-                              {{obj.get_employee_fullname}}
+                              {{obj.department_name}}
                             </label>
                           </h5>
                         </td>
 
                         <td style="padding-left: 10px;">
-                          <a href="{% url 'edit_employee' obj.id %}" style="margin-right: 10px;">Edit</a>
+                          <a href="{% url 'edit_department' obj.id %}" style="margin-right: 10px;">Edit</a>
                           <input type="checkbox" class="" name="items" value='{{obj.id}}'
                             style="padding-left: 99px; width:15px; height:15px;">
                         </td>
@@ -124,9 +136,9 @@ return str(self.source_of_income) -->
               </div>
             </ul>
 
-            <p style="font-size: 10px; color: red;" class="pull-left">*Check Employee to delete</p>
+            <p style="font-size: 10px; color: red;" class="pull-left">*Select Department to delete</p>
             <div style="margin: 0 auto;">
-              <input class="btn btn-danger pull-right" type="submit" value="Delete Employee" />
+              <input class="btn btn-danger pull-right" type="submit" value="Delete" />
             </div>
           </form>
         </div>

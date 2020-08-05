@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import (Position, Employee, VehicleStatus,
-                     VehiclePurpose, VehicleFuelType, VehicleType, TypeOfExpense, SourceOfIncome)
+from .models import (Position, Department, Employee, CarType)
 
 # Register your models here.
 
@@ -27,10 +26,10 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Position)
-class EmployeeAdmin(admin.ModelAdmin):
+class PositionAdmin(admin.ModelAdmin):
     list_display = [
         'id',
-        'position',
+        'position_name',
         'date_updated',
     ]
 
@@ -38,79 +37,25 @@ class EmployeeAdmin(admin.ModelAdmin):
         model = Position
 
 
-@admin.register(VehiclePurpose)
-class VehiclePurposeAdmin(admin.ModelAdmin):
+@admin.register(Department)
+class DepartmentAdmin(admin.ModelAdmin):
     list_display = [
         'id',
-        'company',
-        'purpose_name',
+        'department_name',
         'date_updated',
     ]
 
     class Meta:
-        model = VehiclePurpose
+        model = Department
 
 
-@admin.register(VehicleType)
-class VehicleTypeAdmin(admin.ModelAdmin):
+@admin.register(CarType)
+class CarTypeAdmin(admin.ModelAdmin):
     list_display = [
         'id',
-        'company',
-        'vehicle_type',
+        'car_type',
         'date_updated',
     ]
 
     class Meta:
-        model = VehicleType
-
-
-@admin.register(VehicleFuelType)
-class VehicleFuelTypeAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'company',
-        'fuel_type',
-        'date_updated',
-    ]
-
-    class Meta:
-        model = VehicleFuelType
-
-
-@admin.register(VehicleStatus)
-class VehicleStatusAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'company',
-        'vehicle_status',
-        'date_updated',
-    ]
-
-    class Meta:
-        model = VehicleStatus
-
-
-@admin.register(TypeOfExpense)
-class TypeOfExpenseAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'company',
-        'type_of_expense',
-        'date_updated',
-    ]
-
-    class Meta:
-        model = TypeOfExpense
-
-
-@admin.register(SourceOfIncome)
-class SourceOfIncomeAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'company',
-        'source_of_income',
-        'date_updated',
-    ]
-
-    class Meta:
-        model = SourceOfIncome
+        model = CarType
